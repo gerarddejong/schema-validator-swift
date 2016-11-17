@@ -1,15 +1,15 @@
 import Foundation
 
-public class JSONSchemaValidator {
+class JSONSchemaValidator: SchemaValidator {
     private var JSONSchema =  [String: Any]()
     
-    public func setSchema(schema: String) {
+    func setSchema(schema: String) {
         JSONSchema = try! JSONSerialization.jsonObject(with: schema.data(using: .utf8)!) as! [String: Any]
         
         // resolve links to subschemas here... "$ref": "#definitions/schema"
     }
     
-    public func validate(instance: Any) -> (isValid: Bool, message: String) {
+    func validate(instance: Any) -> (isValid: Bool, message: String) {
         if let type = JSONSchema["type"] as? String {
             if type == "string" {
                 return validateString(instance: instance)
@@ -22,7 +22,7 @@ public class JSONSchemaValidator {
         return (false, "Foo")
     }
     
-    public func validateString(instance: Any) -> (isValid: Bool, message: String) {
+    func validateString(instance: Any) -> (isValid: Bool, message: String) {
         if let stringInstance = instance as? String {
             if let minimumLength = JSONSchema["minLength"] as? Int {
                 if(stringInstance.characters.count < minimumLength) {
@@ -30,8 +30,8 @@ public class JSONSchemaValidator {
                 }
             }
             
-            if let maximumLength = JSONSchema["maximumLength"] as? Int {
-                if(stringInstance.characters.count < maximumLength) {
+            if let maximumLength = JSONSchema["maxLength"] as? Int {
+                if(stringInstance.characters.count > maximumLength) {
                     return (false, "Must be less than \(maximumLength) characters in length.")
                 }
             }

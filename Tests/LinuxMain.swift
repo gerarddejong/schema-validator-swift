@@ -1,6 +1,6 @@
 import XCTest
-@testable import schema_validator_swiftTests
+@testable import SchemaValidatorTests
 
 XCTMain([
-     testCase(schema_validator_swiftTests.allTests),
+     testCase(SchemaValidatorTests.allTests),
 ])
