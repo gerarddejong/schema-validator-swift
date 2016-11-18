@@ -14,6 +14,9 @@ class JSONSchemaValidator: SchemaValidator {
             if type == "string" {
                 return validateString(instance: instance)
             }
+            if type == "integer" {
+                return validateInteger(instance: instance)
+            }
             if type == "number" {
                 return validateNumber(instance: instance)
             }
@@ -41,9 +44,95 @@ class JSONSchemaValidator: SchemaValidator {
         return (false, "Not of type string.")
     }
 
+    func validateInteger(instance: Any) -> (isValid: Bool, message: String) {
+        if let integerInstance = instance as? Int {
+            if let multiple = JSONSchema["multipleOf"] as? Int {
+                if integerInstance % multiple != 0 {
+                    return (false, "Not multiple of \(multiple).")
+                }
+            }
+
+            if let minimum = JSONSchema["minimum"] as? Int {
+                if let exclusiveMinimum = JSONSchema["exclusiveMinimum"] as? Bool {
+                    if exclusiveMinimum {
+                        if integerInstance <= minimum {
+                            return (false, "Must be more than \(minimum).")
+                        }
+                    }
+                }
+                else {
+                    if integerInstance < minimum {
+                        return (false, "Must be more than \(minimum).")
+                    }   
+                }
+            }
+            
+            if let maximum = JSONSchema["maximum"] as? Int {
+                if let exclusiveMaximum = JSONSchema["exclusiveMaximum"] as? Bool {
+                    if exclusiveMaximum {
+                        if integerInstance >= maximum {
+                            return (false, "Must be more than \(maximum).")
+                        }
+                    }
+                }
+                else {
+                    if integerInstance > maximum {
+                        return (false, "Must be less than \(maximum).")
+                    }
+                }
+            }
+
+            return (true, "Okay \(integerInstance).")
+        }
+        
+        return (false, "Not of type integer.")
+    }
+
     func validateNumber(instance: Any) -> (isValid: Bool, message: String) {
-        // if let stringInstance = instance as? Number {
-        // }
+        if let integerInstance = instance as? Int {
+            if let multiple = JSONSchema["multipleOf"] as? Int {
+                if integerInstance % multiple != 0 {
+                    return (false, "Not multiple of \(multiple).")
+                }
+            }
+
+            if let minimum = JSONSchema["minimum"] as? Int {
+                if let exclusiveMinimum = JSONSchema["exclusiveMinimum"] as? Bool {
+                    if exclusiveMinimum {
+                        if integerInstance <= minimum {
+                            return (false, "Must be more than \(minimum).")
+                        }
+                    }
+                }
+                else {
+                    if integerInstance < minimum {
+                        return (false, "Must be more than \(minimum).")
+                    }   
+                }
+            }
+            
+            if let maximum = JSONSchema["maximum"] as? Int {
+                if let exclusiveMaximum = JSONSchema["exclusiveMaximum"] as? Bool {
+                    if exclusiveMaximum {
+                        if integerInstance >= maximum {
+                            return (false, "Must be more than \(maximum).")
+                        }
+                    }
+                }
+                else {
+                    if integerInstance > maximum {
+                        return (false, "Must be less than \(maximum).")
+                    }
+                }
+            }
+
+            return (true, "Okay \(integerInstance).")
+        }
+        
+        if let doubleInstance = instance as? Double {
+            return (true, "Okay \(doubleInstance).")
+        }
+        
         return (false, "Not of type number.")
     }
     
