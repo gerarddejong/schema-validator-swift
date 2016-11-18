@@ -18,7 +18,7 @@ class JSONSchemaValidator: SchemaValidator {
                 return validateInteger(instance: instance)
             }
             if type == "number" {
-                return validateNumber(instance: instance)
+                return validateDouble(instance: instance)
             }
         }
         
@@ -88,7 +88,7 @@ class JSONSchemaValidator: SchemaValidator {
         return (false, "Not of type integer.")
     }
 
-    func validateNumber(instance: Any) -> (isValid: Bool, message: String) {
+    func validateDouble(instance: Any) -> (isValid: Bool, message: String) {
         if let integerInstance = instance as? Int {
             if let multiple = JSONSchema["multipleOf"] as? Int {
                 if integerInstance % multiple != 0 {
