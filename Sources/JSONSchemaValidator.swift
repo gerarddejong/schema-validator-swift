@@ -15,11 +15,11 @@ class JSONSchemaValidator: SchemaValidator {
                 return validateString(instance: instance)
             }
             if type == "number" {
-                return validateString(instance: instance)
+                return validateNumber(instance: instance)
             }
         }
         
-        return (false, "Foo")
+        return (false, "Failed to identify type to validate.")
     }
     
     func validateString(instance: Any) -> (isValid: Bool, message: String) {
@@ -40,4 +40,11 @@ class JSONSchemaValidator: SchemaValidator {
         }
         return (false, "Not of type string.")
     }
+
+    func validateNumber(instance: Any) -> (isValid: Bool, message: String) {
+        // if let stringInstance = instance as? Number {
+        // }
+        return (false, "Not of type number.")
+    }
+    
 }
